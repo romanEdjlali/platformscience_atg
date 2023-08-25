@@ -1,5 +1,6 @@
 package com.roman.platformscienceapp.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ class PlScDriverAdapter(
     private val shipments: List<Shipment>
 ) : RecyclerView.Adapter<PlScDriverAdapter.DriverViewHolder>() {
 
+    private val tag = javaClass.simpleName
     class DriverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val driverNameTextView: TextView = itemView.findViewById(R.id.tvDriver)
         val shipmentAddressTextView: TextView = itemView.findViewById(R.id.tvShipment)
@@ -34,13 +36,11 @@ class PlScDriverAdapter(
     override fun onBindViewHolder(holder: DriverViewHolder, position: Int) {
         //Setting the data in items
         val driver = drivers[position]
-        //There is bug here I have to debug it. I temporary put shipments here and commented shipment for max
-        val shipment = shipments[position]
-        //val shipment = shipments.maxByOrNull { calSuitabilityScore(it.address, driver.name) }
+        val shipment = shipments.maxByOrNull{ calSuitabilityScore(it.address, driver.name)}
         val destination = shipment?.address ?: ""
 
         holder.driverNameTextView.text = driver.name
-        holder.shipmentAddressTextView.text = shipment.address
+        holder.shipmentAddressTextView.text = shipment?.address
         //holder.shipmentAddressTextView.text = destination
         holder.itemView.setOnClickListener {
             // Display shipment destination for the selected driver
@@ -69,16 +69,21 @@ class PlScDriverAdapter(
             val numConsonants = driverName.length - driverName.count { it.lowercase() in "aeiou" }
             numConsonants * 1.0
         }
-
+        //Condition III
         val hasCommonFactors = hasCommonFactors(shipmentLength, driverLength)
         return if (hasCommonFactors) baseSS * 1.5 else baseSS
     }
-
-    //I am stuck here I'll do it later!
+    //Logic for Condition III
     private fun hasCommonFactors(a: Int, b: Int): Boolean {
-        // I have to implement the logic to check if two numbers have common factors
-        // other than 1. Perhaps I should use a loop to check divisibility.
-        // If a common factor finds, return true; otherwise, return false.
-        return false
+        if (a <= 1 || b <= 1)
+            return false
+
+        return greatCommonDivisor(a, b) > 1
+    }
+    private fun greatCommonDivisor(a: Int, b: Int): Int {
+        if (b == 0)
+            return a
+
+        return greatCommonDivisor(b, a % b)
     }
 }

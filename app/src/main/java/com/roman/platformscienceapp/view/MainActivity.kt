@@ -62,10 +62,9 @@ class MainActivity : AppCompatActivity() {
             shipmentList.add(Shipment(shipmentsArray.getString(i)))
 
         }
-        Log.d(tag,"####### DriveList Size is: -> ${driverList.size} #######")
-        Log.d(tag,"-> Driver List -> $driverList")
-        Log.d(tag,"####### Shipment Size is: -> ${shipmentList.size} #######")
-        Log.d(tag,"-> Shipment List -> $shipmentList")
+
+        Log.d(tag,"DriveList Size is: -> ${driverList.size}\nDriver List -> $driverList")
+        Log.d(tag,"Shipment Size is: -> ${shipmentList.size}\nShipment List -> $shipmentList")
     }
 
     private fun getJsonDataFromAsset(fileName: String): String {
